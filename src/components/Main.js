@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import fire from '../config/Fire';
 import Login from './Forms/Login';
 import Register from './Forms/Register';
+import Tracker from './Tracker/Tracker';
 import './Main.css';
 
 export default class Main extends Component {
@@ -8,6 +10,20 @@ export default class Main extends Component {
         user: 1,
         loading: true,
         switchForm: false
+    }
+
+    componentDidMount() {
+        this.authListener();
+    }
+
+    authListener() {
+        fire.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ user });
+            } else {
+                this.setState({ user: null });
+            }
+        });
     }
 
     switchForm = (action) => {
@@ -21,23 +37,25 @@ export default class Main extends Component {
         const form = !this.state.switchForm ? <Login /> : <Register />
         return (
             <>
-                <div className='mainPage'>
-                    {form}
-                    {!this.state.switchForm ?
+                {!this.state.user ?
+                    <div className='mainPage'>
+                        {form}
+                        {!this.state.switchForm ?
 
-                        (<span className='questionLine'>
-                            Not registered yet? <button
-                                onClick={() => this.switchForm(!this.state.switchForm ? 'register' : 'login')}
-                                className='formButton'>Create an account</button>
-                        </span>) : (
-                            <span className='questionLine'>
-                                Have an account? <button
+                            (<span className='questionLine'>
+                                Not registered yet? <button
                                     onClick={() => this.switchForm(!this.state.switchForm ? 'register' : 'login')}
-                                    className='formButton'>Sign in here!</button>
-                            </span>
-                        )
-                    }
-                </div>
+                                    className='formButton'>Create an account</button>
+                            </span>) : (
+                                <span className='questionLine'>
+                                    Have an account? <button
+                                        onClick={() => this.switchForm(!this.state.switchForm ? 'register' : 'login')}
+                                        className='formButton'>Sign in here!</button>
+                                </span>
+                            )
+                        }
+                    </div> : (<Tracker />)
+                }
             </>
         );
     }
