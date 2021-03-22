@@ -3,6 +3,7 @@ import fire from '../config/Fire';
 import Login from './Forms/Login';
 import Register from './Forms/Register';
 import Tracker from './Tracker/Tracker';
+import Spinner from '../assets/loader.gif';
 import './Main.css';
 
 export default class Main extends Component {
@@ -34,7 +35,18 @@ export default class Main extends Component {
     }
 
     render() {
+
         const form = !this.state.switchForm ? <Login /> : <Register />
+
+        if (this.state.user === 1) {
+            return (
+                <div className='mainPage'>
+                    <div className='Spinner'>
+                        <img src={Spinner} alt='Spinner' className='ImgSpinner' />
+                    </div>
+                </div>
+            )
+        }
         return (
             <>
                 {!this.state.user ?

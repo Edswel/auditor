@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import fire from '../../config/Fire';
+import './Tracker.css';
 
 class Tracker extends Component {
 
@@ -10,9 +11,11 @@ class Tracker extends Component {
 
     render() {
         return (
-            <>
-                <button onClick={this.logout}>Logout</button>
-            </>
+            <div className='trackerPage'>
+                <div className='welcome'>
+                    <span>welcome, Username!</span>
+                </div>
+            </div>
         );
     }
 }
