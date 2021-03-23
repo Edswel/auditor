@@ -19,6 +19,45 @@ class Tracker extends Component {
         fire.auth().signOut();
     }
 
+    handleChange = input => e => {
+        this.setState({
+            [input]: e.target.value !== '0' ? e.target.value : ''
+        });
+    }
+
+    addNewTransaction = () => {
+        const { transactionName, transactionType, price, currentUID, money } = this.state;
+
+        if (transactionName && transactionType && price) {
+            const BackUpState = this.state.transactions;
+            BackUpState.push({
+                id: BackUpState.length + 1,
+                name: transactionName,
+                type: transactionType,
+                price: price,
+                user_id: currentUID
+            });
+            fire.database().ref('Transactions/' + currentUID).push({
+                id: BackUpState.length + 1,
+                name: transactionName,
+                type: transactionType,
+                price: price,
+                user_id: currentUID
+            }).then((data) => {
+                console.log('Stored');
+                this.setState({
+                    transactions: BackUpState,
+                    money: transactionType === 'deposit' ? money + parseFloat(price) : money - parseFloat(price),
+                    transactionName: '',
+                    transactionType: '',
+                    price: ''
+                })
+            }).catch((error) => {
+                console.log('Error', error);
+            });
+        }
+    }
+
     render() {
 
         let currentUser = fire.auth().currentUser;
@@ -39,9 +78,13 @@ class Tracker extends Component {
                                 placeholder='Expense'
                                 type='text'
                                 name='transactionName'
+                                value={this.state.transactionName}
+                                onChange={this.handleChange('transactionName')}
                             />
                             <div className='inputGroup'>
-                                <select name='type'>
+                                <select name='type'
+                                    value={this.state.transactionType}
+                                    onChange={this.handleChange('transactionType')}>
                                     <option value='0'>Type</option>
                                     <option value='expense'>Expense</option>
                                     <option value='deposit'>Deposit</option>
@@ -50,10 +93,15 @@ class Tracker extends Component {
                                     placeholder='Amount'
                                     type='text'
                                     name='price'
+                                    value={this.state.price}
+                                    onChange={this.handleChange('price')}
                                 />
                             </div>
-                            <button className='addTransaction'>ADD TRANSACTION</button>
+
                         </form>
+                        <button className='addTransaction' onClick={() => this.addNewTransaction()}>
+                            ADD TRANSACTION
+                        </button>
                     </div>
                 </div>
                 <div className='latestTransactions'>
