@@ -4,16 +4,29 @@ import './Tracker.css';
 
 class Tracker extends Component {
 
+    state = {
+        transactions: [],
+        money: 0,
+
+        transactionName: '',
+        transactionType: '',
+        price: '',
+        currentUID: fire.auth().currentUser.uid
+    }
+
     // Logout method
     logout = () => {
         fire.auth().signOut();
     }
 
     render() {
+
+        let currentUser = fire.auth().currentUser;
+
         return (
             <div className='trackerPage'>
                 <div className='welcome'>
-                    <span>Welcome, Username!</span>
+                    <span>Welcome, {currentUser.displayName}!</span>
                     <button className='logout' onClick={this.logout}>Logout</button>
                 </div>
                 <div className='totalAmount'>

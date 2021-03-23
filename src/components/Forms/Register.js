@@ -6,7 +6,7 @@ class Register extends Component {
     state = {
         email: '',
         password: '',
-        userName: '',
+        displayName: '',
         fireErrors: ''
     }
 
@@ -21,7 +21,7 @@ class Register extends Component {
         fire.auth().createUserWithEmailAndPassword(this.state.email, this.state.password).then((user) => {
             let currentUser = fire.auth().currentUser;
             currentUser.updateProfile({
-                userName: this.state.userName
+                displayName: this.state.displayName
             })
         }).catch((error) => {
             this.setState({ fireErrors: error.message })
@@ -39,8 +39,8 @@ class Register extends Component {
                         className='registrationField'
                         placeholder='Username'
                         onChange={this.handleChange}
-                        value={this.state.userName}
-                        name='userName' />
+                        value={this.state.displayName}
+                        name='displayName' />
                     <input type='text'
                         className='registrationField'
                         placeholder='Email'
