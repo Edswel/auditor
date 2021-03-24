@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import fire from '../../config/Fire';
 import './Tracker.css';
+import Transaction from './Transaction/Transaction';
 
 class Tracker extends Component {
 
@@ -38,7 +39,7 @@ class Tracker extends Component {
                 user_id: currentUID
             });
             fire.database().ref('Transactions/' + currentUID).push({
-                id: BackUpState.length + 1,
+                id: BackUpState.length,
                 name: transactionName,
                 type: transactionType,
                 price: price,
@@ -69,7 +70,7 @@ class Tracker extends Component {
                     <button className='logout' onClick={this.logout}>Logout</button>
                 </div>
                 <div className='totalAmount'>
-                    $150.00
+                    ${this.state.money}
                 </div>
                 <div className='newTransactionPage'>
                     <div className='newTransaction'>
@@ -107,10 +108,15 @@ class Tracker extends Component {
                 <div className='latestTransactions'>
                     <h5>Latest Transactions!</h5>
                     <ul>
-                        <li>
-                            <div>Cash Transfer</div>
-                            <div>+$100</div>
-                        </li>
+                        {
+                            Object.keys(this.state.transactions).map((id) => (
+                                <Transaction
+                                    type={this.state.transactions[id].type}
+                                    name={this.state.transactions[id].name}
+                                    price={this.state.transactions[id].price}
+                                />
+                            ))
+                        }
                     </ul>
                 </div>
             </div>
